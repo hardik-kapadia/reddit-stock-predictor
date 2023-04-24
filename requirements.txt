@@ -1,0 +1,10 @@
+praw
+flair
+numpy
+pandas
+nltk
+pyyaml
+pathvalidate
+investpy
+yfinance
+stockquotes
