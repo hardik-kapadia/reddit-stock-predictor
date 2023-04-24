@@ -49,8 +49,6 @@ class reddit_api:
 
                 final_posts.append(temp)
 
-                print(temp)
-
                 post_count += 1
 
                 if post_count >= limit:
