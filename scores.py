@@ -62,7 +62,7 @@ class process:
             sentence[i] = " ".join(new)
         return sentence[0]
 
-    def lemmetization(self, tweet):
+    def lemmetization(self,post):
         df = self.df
         lem = WordNetLemmatizer()
 
@@ -154,10 +154,25 @@ def get_score(_stock_):
         )
     except KeyError:
         print("Got the error")
-        latest_avg = float(df3[str(DT.date.today() - DT.timedelta(days=2))]) * 2
+        
+        found = False
+        
+        for i in range(7):
+            
+            key = str(DT.date.today() - DT.timedelta(days=i))
+            
+            print(f'checking for {key}')
+            
+            if key in df3:
+                latest_avg = float(df3[key]) * 2
+                found = True
+                break
+            
+        if not found:
+            raise ValueError("No posts for the company in recent history")
 
     print("\n\n Latest avg: ", latest_avg, "\n\n")
-    prediction = latest_avg > 0
+    # prediction = latest_avg > 0
     count = 0
 
     avg = 0
@@ -224,5 +239,5 @@ def get_score(_stock_):
     return result, future_price, current_price
 
 
-stock = get_stock_from_symbol("TSLA", "Tesla", ["car"])
+stock = get_stock_from_symbol("TSLA", "Tesla", ["car","AI","self-driving"])
 get_score(stock)
