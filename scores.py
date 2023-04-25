@@ -1,22 +1,19 @@
 from flair.data import Sentence
 from flair.models import TextClassifier
-import flair
-import numpy as np
+
 import pandas as pd
+
 import re
+
 import nltk
-
-from reddit import reddit_api
-from models import RedditTextPost, Stock
-from get_stocks import get_current_stock_price, get_stock, get_stock_from_symbol
-
-import factor as fact
-import datetime as DT
-
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import stopwords
 
+from get_stocks import get_current_stock_price, get_stock_from_symbol
+import factor as fact
+import datetime as DT
 from reddit import reddit_api
+
 import yaml
 
 with open("auth.yaml", "r") as yamlfile:
@@ -44,25 +41,29 @@ def get_data(post):
 
 class process:
     def __init__(self, df):
-        
-        # print(df.head())
+
         self.df = df
 
     def noise_removal(self, sentence):
         for i in range(len(sentence)):
-            sentence[i] = sentence[i].lower()
-            sentence[i] = re.sub(r"\W", " ", sentence[i])
+            sentence[i] = sentence[i].lower() # case folding
+            
+            sentence[i] = re.sub(r"\W", " ", sentence[i]) # non-word character
             sentence[i] = re.sub(r"\d", " ", sentence[i])  # removes digits
             sentence[i] = re.sub(r"\s+", " ", sentence[i])  # removes spaces
-            words = nltk.word_tokenize(sentence[i])
+            
+            words = nltk.word_tokenize(sentence[i]) # tokenization
+            
             new = []
+            
             for word in words:
-                if word not in stopwords.words("english"):
+                if word not in stopwords.words("english"): # stop word removal
                     new.append(word)
             sentence[i] = " ".join(new)
+            
         return sentence[0]
 
-    def lemmetization(self,post):
+    def lemmetization(self,post): # lemmatization
         df = self.df
         lem = WordNetLemmatizer()
 
@@ -72,13 +73,21 @@ class process:
             df["text"][i] = " ".join(words)
 
     def predictionsentiment(self, post):
-        classifier = TextClassifier.load("en-sentiment")
+        classifier = TextClassifier.load("en-sentiment") # pre-trained ml model of flair
         sentence = Sentence(post)
         # print(tweet)
         classifier.predict(sentence)
         x = str(sentence.labels[0])
+        
+        print(x)
+        
         y = x.split(" ")
+        
+        print(y)
         z = float(y[-1][1:-1])
+        
+        print(z)
+        
         if str(y[-2]) == "POSITIVE":
             return z
         else:
@@ -109,7 +118,7 @@ def get_formatted_df(df):
 #     print("\n\n")
 #     print(stock__.history)
 
-subreddit_name='wallstreetbets+IndianStockMarket'
+subreddit_name='wallstreetbets+IndianStockMarket+StockMarket+stocks'
 
 def get_score(_stock_):
     
