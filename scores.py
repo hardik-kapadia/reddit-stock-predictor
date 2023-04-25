@@ -154,8 +154,6 @@ def get_score(_stock_):
 
     print(hist)
 
-    prediction = False
-
     latest_avg = 0
     try:
         latest_avg = float(df3[str(DT.date.today())]) + float(

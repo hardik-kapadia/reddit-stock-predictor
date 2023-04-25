@@ -13,6 +13,12 @@ def get_current_stock_price(symbol):
         return 0
     return float(price)
 
+def get_stock_from_symbol(symbol,name,keywords: list = []):
+    
+    yfstock = yf.Ticker(symbol)
+    hist = yfstock.history(period='6d')
+    
+    return models.Stock(name,symbol,hist, keywords)
 
 def get_stock(stockname):
     stocks = []
@@ -33,10 +39,3 @@ def get_stock(stockname):
         _stock = models.stock(name, symbol, hist, country)
         stocks.append(_stock)
     return stocks
-
-def get_stock_from_symbol(symbol,name,keywords: list = []):
-    
-    yfstock = yf.Ticker(symbol)
-    hist = yfstock.history(period='6d')
-    
-    return models.Stock(name,symbol,hist, keywords)
