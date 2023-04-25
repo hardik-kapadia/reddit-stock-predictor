@@ -90,7 +90,7 @@ def get_initial_df(posts):
 
     for i in posts:
         post = get_data(i)
-        df = df.append(post, ignore_index=True)
+        df = df._append(post, ignore_index=True)
 
     return df
 
